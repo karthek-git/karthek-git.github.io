@@ -10,8 +10,7 @@ body {
 }
 
 .f_item {
-    padding-right: 8px;
-    padding-left: 8px;
+    padding: 8px;
     font-family: Arimo, sans-serif;
     color: dodgerblue;
 }
