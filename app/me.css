@@ -6,10 +6,12 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .f_item {
-    padding-right: 16px;
+    padding-right: 8px;
+    padding-left: 8px;
     font-family: Arimo, sans-serif;
     color: dodgerblue;
 }
