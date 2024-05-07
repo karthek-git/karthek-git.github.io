@@ -1,0 +1,31 @@
+body {
+    background-color: black;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.f_item {
+    padding-right: 16px;
+    color: dodgerblue;
+}
+
+.pic {
+    width: 160px;
+    height: 160px;
+    border-color: dodgerblue;
+    border-width: 8px;
+    border-style: inset;
+    border-radius: 180px;;
+}
+
+.name {
+    color: white;
+    font-weight: bold;
+    font-family: Arimo, sans-serif;
+    font-size: xx-large;
+    text-align: center;
+}
