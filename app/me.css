@@ -2,6 +2,10 @@ body {
     background-color: black;
 }
 
+a:link {
+    text-decoration: none;
+}
+
 .center {
     display: flex;
     justify-content: center;
@@ -21,7 +25,8 @@ body {
     border-color: dodgerblue;
     border-width: 8px;
     border-style: inset;
-    border-radius: 180px;;
+    border-radius: 180px;
+    margin-top: 80px;
 }
 
 .name {
