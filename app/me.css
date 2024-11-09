@@ -1,5 +1,6 @@
 body {
     background-color: black;
+    color: white;
 }
 
 a:link {
@@ -35,4 +36,84 @@ a:link {
     font-family: Arimo, sans-serif;
     font-size: xx-large;
     text-align: center;
+}
+
+section{
+    padding: 16px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+@media only screen and (max-width: 960px) {
+    section {
+        width: 80%;
+        margin: 0 auto;
+    }
+}
+
+main h2 {
+    color: dodgerblue;
+}
+
+.ppr_p {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.ppr_p .ppr_title {
+    width: 70%;
+    margin-bottom: 20px;
+}
+
+.ppr_thumbnail {
+    width: 200px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.ppr_thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.ppr_ref {
+    color: #007ac1;
+    text-decoration: none;
+}
+
+.ppr_ref a{
+    padding-right: 8px;
+}
+
+.ppr_p h3 {
+    margin: 10px 0;
+    font-size: 1em;
+}
+
+.prj_p {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: normal;
+    margin-top: 20px;
+}
+
+.prj_p .prj_title {
+    width: 70%;
+    margin-bottom: 20px;
+}
+
+.prj_thumbnail {
+    height: 80px;
+    width: 80px;
+    border-radius: 16px;
+    margin-right: 24px;
+}
+
+.prj_p h3 {
+    margin: 10px 0;
+    font-size: 1em;
 }
