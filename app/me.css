@@ -1,17 +1,21 @@
 html {
-    color-scheme: light;
-    --page-color: white;
-    --ink-color: black;
+    color-scheme: dark;
+    --page-color: black;
+    --ink-color: white;
     --highlight-color: dodgerblue;
+    --img-border: 0 solid gray;
 }
-@media (prefers-color-scheme: dark) {
+
+@media (prefers-color-scheme: light) {
     html {
-        color-scheme: dark;
-        --page-color: black;
-        --ink-color: white;
+        color-scheme: light;
+        --page-color: white;
+        --ink-color: black;
         --highlight-color: dodgerblue;
+        --img-border: 1px solid gray;
     }
 }
+
 html {
     accent-color: var(--highlight-color);
 }
@@ -127,6 +131,7 @@ main h2 {
     width: 200px;
     object-fit: cover;
     border-radius: 5px;
+    border: var(--img-border);
 }
 
 .ppr_thumbnail img {
@@ -141,7 +146,7 @@ main h2 {
     text-decoration: none;
 }
 
-.ppr_ref a{
+.ppr_ref a {
     padding-right: 8px;
 }
 
@@ -167,6 +172,7 @@ main h2 {
     width: 80px;
     border-radius: 16px;
     margin-right: 24px;
+    border: var(--img-border);
 }
 
 .prj_p h3 {
