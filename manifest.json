@@ -1,0 +1,28 @@
+{
+  "name": "Karthik",
+  "short_name": "Karthik",
+  "icons": [
+    {
+      "src": "art/favicon/png/karthek_96.png",
+      "type": "image/svg+xml",
+      "sizes": "96x96"
+    },
+    {
+      "src": "art/favicon/png/karthek_192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "art/favicon/png/karthek_512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "id": "/",
+  "start_url": "/",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#1e8ffd",
+  "description": "Karthik Alapati Website"
+}
