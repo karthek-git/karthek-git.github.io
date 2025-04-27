@@ -1,6 +1,24 @@
+html {
+    color-scheme: light;
+    --page-color: white;
+    --ink-color: black;
+    --highlight-color: dodgerblue;
+}
+@media (prefers-color-scheme: dark) {
+    html {
+        color-scheme: dark;
+        --page-color: black;
+        --ink-color: white;
+        --highlight-color: dodgerblue;
+    }
+}
+html {
+    accent-color: var(--highlight-color);
+}
+
 body {
-    background-color: black;
-    color: white;
+    background-color: var(--page-color);
+    color: var(--ink-color);
     font-family: Arimo, Helvetica, sans-serif;
 }
 
@@ -50,6 +68,7 @@ nav {
 }
 
 .nav_item {
+    color: var(--highlight-color);
     padding: 8px;
     font-family: Arimo, sans-serif;
     font-weight: bold;
@@ -59,6 +78,7 @@ nav {
 }
 
 .nav_item_end {
+    color: var(--highlight-color);
     padding: 8px;
     font-family: Arimo, sans-serif;
     font-weight: bold;
