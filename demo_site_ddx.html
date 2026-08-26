@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumina Electronics | Premium Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --secondary: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        * { box-sizing: border-box; transition: all 0.2s ease-in-out; }
+        body { font-family: 'Inter', sans-serif; margin: 0; padding: 0; color: var(--text-main); background: var(--bg); line-height: 1.5; }
+
+        .screen { display: none; padding: 40px 20px; max-width: 1000px; margin: 40px auto; min-height: 70vh; background: var(--card-bg); border-radius: 16px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); }
+        .screen.active { display: block; animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Navigation */
+        nav { background: white; border-bottom: 1px solid #e2e8f0; padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
+        .logo { font-weight: 800; font-size: 24px; color: var(--primary); letter-spacing: -1px; }
+        .nav-cart { position: relative; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .cart-badge { background: var(--danger); color: white; padding: 2px 8px; border-radius: 99px; font-size: 11px; }
+
+        /* Urgency Banner */
+        .urgency-ribbon { background: #fee2e2; color: #991b1b; padding: 12px; text-align: center; font-size: 14px; font-weight: 600; border-bottom: 1px solid #fecaca; }
+        .timer-val { font-family: monospace; font-size: 18px; color: var(--danger); background: white; padding: 2px 6px; border-radius: 4px; margin-left: 5px; border: 1px solid #fecaca; }
+
+        /* Cookie Banner (Dark Pattern: Visual Asymmetry) */
+        #cookie-banner { position: fixed; bottom: 20px; left: 20px; right: 20px; max-width: 500px; background: #1e293b; color: white; padding: 24px; border-radius: 12px; z-index: 10000; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); }
+        .cookie-text { font-size: 14px; margin-bottom: 20px; color: #cbd5e1; }
+        .btn-accept-cookies { background: var(--success); color: white; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; width: 100%; font-size: 16px; }
+        .btn-accept-cookies:hover { filter: brightness(1.1); }
+        .link-pref { display: block; text-align: center; margin-top: 12px; color: #94a3b8; font-size: 12px; text-decoration: underline; cursor: pointer; }
+
+        /* Modals */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 10001; backdrop-filter: blur(4px); }
+        .modal-body { background: white; width: 450px; margin: 10vh auto; padding: 32px; border-radius: 16px; position: relative; }
+        .hidden-reject { position: absolute; bottom: 10px; right: 10px; font-size: 1px; color: #fff; cursor: pointer; opacity: 0.1; } /* Dark Pattern: Hidden Reject */
+
+        /* Shop Elements */
+        h1 { font-size: 32px; font-weight: 800; margin-bottom: 30px; letter-spacing: -0.5px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
+        .product-card { border: 1px solid #e2e8f0; padding: 20px; border-radius: 12px; background: white; position: relative; }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .badge { position: absolute; top: 12px; left: 12px; background: var(--warning); color: white; padding: 4px 12px; border-radius: 99px; font-size: 10px; font-weight: 800; text-transform: uppercase; }
+        .img-placeholder { width: 100%; aspect-ratio: 1; background: #f1f5f9; border-radius: 8px; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; color: #cbd5e1; font-size: 40px; }
+
+        .btn-primary { background: var(--primary); color: white; padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; width: 100%; }
+        .btn-primary:hover { background: var(--primary-hover); }
+
+        /* Forms */
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px; color: var(--secondary); }
+        .input-group input, .input-group select { width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 15px; }
+        .input-group input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
+
+        /* Price/List Elements */
+        .row-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f1f5f9; }
+        .price-tag { color: var(--danger); font-weight: 700; font-size: 20px; }
+
+        /* Sneaking (Pre-selected) */
+        .option-box { background: #f8fafc; border: 2px solid #e2e8f0; padding: 16px; border-radius: 12px; margin: 16px 0; }
+        .option-box.selected { border-color: var(--primary); background: #f5f3ff; }
+
+        footer { margin-top: 80px; padding: 60px 20px; background: white; border-top: 1px solid #e2e8f0; text-align: center; }
+        .legal-links { margin-top: 20px; }
+        /* Dark Pattern: Low Contrast Footer Links */
+        .legal-links a { color: #f1f5f9; font-size: 9px; text-decoration: none; margin: 0 10px; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="logo">LUMINA</div>
+    <div class="nav-cart">
+        <span>Cart</span>
+        <span class="cart-badge" id="cart-count">0</span>
+    </div>
+</nav>
+
+<div class="urgency-ribbon">
+    FLASH SALE: Order within <span class="timer-val" id="timer">09:59</span> to get 20% off! Only <span id="stock-count" style="color:var(--danger)">3</span> units left!
+</div>
+
+<!-- SCREEN 1: DISCOVERY -->
+<div id="screen-home" class="screen active">
+    <h1>Featured Collections</h1>
+    <div class="grid">
+        <div class="product-card">
+            <div class="badge">Trending</div>
+            <div class="img-placeholder">🎧</div>
+            <h3>Aura Noise-Cancelling Headphones</h3>
+            <p style="color: var(--text-muted); font-size: 14px;">Next-gen audio with adaptive transparency mode.</p>
+            <div class="row-item">
+                <span class="price-tag">199,00 €</span>
+            </div>
+            <button class="btn-primary" onclick="goTo('screen-product')">View Details</button>
+        </div>
+        <div class="product-card">
+            <div class="img-placeholder">⌚</div>
+            <h3>Lumina Watch Series S</h3>
+            <p style="color: var(--text-muted); font-size: 14px;">Health tracking reinvented. 7-day battery life.</p>
+            <div class="row-item">
+                <span class="price-tag">349,00 €</span>
+            </div>
+            <button class="btn-primary" onclick="alert('Added to cart')">Add to Cart</button>
+        </div>
+    </div>
+</div>
+
+<!-- SCREEN 2: PRODUCT DETAIL -->
+<div id="screen-product" class="screen">
+    <button style="background:none; border:none; color:var(--primary); cursor:pointer; font-weight:600; margin-bottom:20px;" onclick="goTo('screen-home')">← Back to Store</button>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:40px;">
+        <div class="img-placeholder" style="font-size:120px;">🎧</div>
+        <div>
+            <h1>Aura Headphones</h1>
+            <p style="font-size:18px; color:var(--text-muted);">The definitive wireless listening experience.</p>
+            <div style="font-size:32px; font-weight:800; color:var(--text-main); margin: 20px 0;">199,00 €</div>
+
+            <!-- Dark Pattern: Sneaking / Pre-selection -->
+            <div class="option-box selected">
+                <label style="display:flex; align-items:center; gap:12px; cursor:pointer;">
+                    <input type="checkbox" checked id="insurance-check" style="width:20px; height:20px; accent-color:var(--primary);">
+                    <div>
+                        <div style="font-weight:700;">Lumina Care+ (+ 29,99 €)</div>
+                        <div style="font-size:12px; color:var(--text-muted);">Accidental damage protection for 2 years.</div>
+                    </div>
+                </label>
+            </div>
+
+            <button class="btn-primary" style="padding:18px; font-size:18px;" onclick="addToCart()">Add to Cart</button>
+        </div>
+    </div>
+</div>
+
+<!-- SCREEN 3: CHECKOUT START (CART) -->
+<div id="screen-cart" class="screen">
+    <h1>Shopping Cart</h1>
+    <div class="row-item" style="font-weight:600; color:var(--secondary);">
+        <span>Item</span>
+        <span>Price</span>
+    </div>
+    <div class="row-item">
+        <span>Aura Headphones</span>
+        <span>199,00 €</span>
+    </div>
+    <div class="row-item" style="background:#f1f5f9; padding: 12px; border-radius:8px; margin: 8px 0;">
+        <span>Lumina Care+ (Pre-selected)</span>
+        <span>29,99 €</span>
+    </div>
+
+    <!-- Dark Pattern: Additional Sneaking in Cart -->
+    <div class="option-box">
+        <label style="display:flex; align-items:center; gap:12px; cursor:pointer;">
+            <input type="checkbox" checked style="width:20px; height:20px; accent-color:var(--primary);">
+            <div>
+                <div style="font-weight:700;">Priority Handling (+ 4,99 €)</div>
+                <div style="font-size:12px; color:var(--text-muted);">Get your order processed before everyone else.</div>
+            </div>
+        </label>
+    </div>
+
+    <div style="text-align:right; margin-top:40px; padding-top:20px; border-top: 2px solid #f1f5f9;">
+        <div style="font-size:16px; color:var(--secondary);">Estimated Total</div>
+        <div style="font-size:36px; font-weight:800; color:var(--primary);">233,98 €</div>
+        <br>
+        <button class="btn-primary" style="width:250px;" onclick="goTo('screen-auth')">Checkout Now</button>
+    </div>
+</div>
+
+<!-- SCREEN 4: IDENTITY (ACCOUNT CREATION) -->
+<div id="screen-auth" class="screen">
+    <h1>Express Checkout</h1>
+    <p style="color:var(--text-muted); margin-bottom:30px;">Create your Lumina ID to track your premium order.</p>
+
+    <div style="max-width:450px;">
+        <div class="input-group">
+            <label>Email Address</label>
+            <input type="email" placeholder="you@example.com" id="user-email">
+        </div>
+        <div class="input-group">
+            <label>Create Password</label>
+            <input type="password" placeholder="••••••••" id="user-pass">
+        </div>
+        <button class="btn-primary" onclick="goTo('screen-otp')">Continue to Delivery</button>
+        <p style="font-size:12px; color:var(--text-muted); margin-top:20px; text-align:center;">
+            By continuing, you agree to our 2,400 page <a href="#" style="color:var(--primary)">Terms of Service</a>.
+        </p>
+    </div>
+</div>
+
+<!-- SCREEN 5: VERIFICATION -->
+<div id="screen-otp" class="screen">
+    <h1>Secure Verification</h1>
+    <p style="color:var(--text-muted);">A 6-digit code has been sent to your email address.</p>
+    <div class="input-group" style="max-width:200px; margin: 30px 0;">
+        <label>Verification Code</label>
+        <input type="text" placeholder="000000" id="otp-field" style="text-align:center; font-size:24px; letter-spacing:8px;">
+    </div>
+    <button class="btn-primary" style="max-width:250px;" onclick="goTo('screen-payment')">Verify & Proceed</button>
+</div>
+
+<!-- SCREEN 6: PAYMENT -->
+<div id="screen-payment" class="screen">
+    <h1>Payment Method</h1>
+    <p style="color:var(--text-muted);">Choose how you'd like to pay for your Lumina products.</p>
+
+    <div class="input-group">
+        <label>Select Provider</label>
+        <select>
+            <option>Lumina Finance (Monthly installments)</option>
+            <option>Credit Card (VISA/Mastercard)</option>
+            <option>PayPal</option>
+        </select>
+    </div>
+
+    <!-- Dark Pattern: Default selection of high-fee method -->
+    <div class="option-box selected" style="border-left: 5px solid var(--warning);">
+        <div style="font-weight:700;">SafePay Protection Enabled</div>
+        <p style="font-size:12px; margin: 4px 0;">Mandatory for high-value orders (+ 8,50 €)</p>
+    </div>
+
+    <button class="btn-primary" onclick="goTo('screen-final')">Review Order</button>
+</div>
+
+<!-- SCREEN 7: FINAL REVIEW -->
+<div id="screen-final" class="screen">
+    <h1>Review & Confirm</h1>
+    <div style="background:#f8fafc; padding:24px; border-radius:12px;">
+        <div class="row-item"><span>Aura Headphones</span><span>199,00 €</span></div>
+        <div class="row-item"><span>Lumina Care+</span><span>29,99 €</span></div>
+        <div class="row-item"><span>Priority Handling</span><span>4,99 €</span></div>
+        <div class="row-item"><span>SafePay Protection</span><span>8,50 €</span></div>
+        <div class="row-item"><span>Processing Fee</span><span>2,45 €</span></div>
+        <div class="row-item" style="border:none; font-weight:800; font-size:24px; margin-top:20px;">
+            <span>Total Amount</span>
+            <span style="color:var(--primary);">244,93 €</span>
+        </div>
+    </div>
+    <br>
+    <button class="btn-primary" style="background:var(--success); padding:20px; font-size:20px;" id="checkout-finish" onclick="alert('Order Successful!'); location.reload();">Order & Pay Now</button>
+    <p style="text-align:center; font-size:12px; color:var(--text-muted); margin-top:15px;">Orders cannot be cancelled after confirmation.</p>
+</div>
+
+<!-- COOKIE BANNER (DARK PATTERN) -->
+<div id="cookie-banner">
+    <div class="cookie-text">
+        We use advanced tracking and profiling to "personalize" your store experience. By clicking accept, you consent to our network of 450+ advertising partners tracking your movement across the web.
+    </div>
+    <button class="btn-accept-cookies" onclick="document.getElementById('cookie-banner').remove()">ACCEPT & OPTIMIZE</button>
+    <span class="link-pref" onclick="document.getElementById('cookie-modal').style.display='block'">Manage my preferences</span>
+</div>
+
+<div id="cookie-modal" class="modal-overlay">
+    <div class="modal-body">
+        <h2>Data Preferences</h2>
+        <p style="font-size:13px; color:var(--secondary);">Toggle your data sharing preferences below:</p>
+        <div class="row-item"><label>Essential (Required)</label><input type="checkbox" checked disabled></div>
+        <div class="row-item"><label>Marketing & Profiling</label><input type="checkbox" checked></div>
+        <div class="row-item"><label>Third-Party Sharing</label><input type="checkbox" checked></div>
+        <div class="row-item"><label>Location Analytics</label><input type="checkbox" checked></div>
+        <br>
+        <button class="btn-primary" onclick="document.getElementById('cookie-modal').style.display='none'; document.getElementById('cookie-banner').remove();">Save and Close</button>
+        <!-- The hidden reject button -->
+        <div class="hidden-reject" onclick="document.getElementById('cookie-modal').style.display='none'; document.getElementById('cookie-banner').remove();">Reject All Cookies</div>
+    </div>
+</div>
+
+<footer>
+    <div class="logo" style="filter: grayscale(1); opacity: 0.3; font-size: 18px;">LUMINA</div>
+    <p>© 2026 Lumina Electronics Global Corp.</p>
+    <div class="legal-links">
+        <a href="#">Impressum</a>
+        <a href="#">Widerrufsbelehrung</a>
+        <a href="#">Datenschutz</a>
+        <a href="#">AGB</a>
+        <a href="#">Shipping Policy</a>
+    </div>
+</footer>
+
+<script>
+    function goTo(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+        window.scrollTo(0,0);
+    }
+
+    function addToCart() {
+        document.getElementById('cart-count').innerText = "1";
+        goTo('screen-cart');
+    }
+
+    // Modern Timer
+    let time = 600;
+    setInterval(() => {
+        time--;
+        if (time < 0) time = 600;
+        let m = Math.floor(time/60);
+        let s = time%60;
+        document.getElementById('timer').innerText = (m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+    }, 1000);
+
+    // Dynamic stock depletion
+    setTimeout(() => {
+        const stock = document.getElementById('stock-count');
+        stock.innerText = "1";
+        stock.parentElement.style.animation = "pulse 0.5s infinite";
+    }, 20000);
+</script>
+
+</body>
+</html>
